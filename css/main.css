@@ -22,7 +22,7 @@ body {
 }
 
 .header-btn{
-    font-weight: 700;
+    font-weight: 600;
     margin: 0 12px;
 
     text-decoration: none;
@@ -67,11 +67,11 @@ header {
 }
 
 .user-info__name{
-    font-weight:900;
+    font-weight:700;
 }
 
 .user-info__location{
-    font-weight: 600;
+    font-weight: 400;
     color: #ccc;
 }
 
@@ -111,7 +111,7 @@ section:first-of-type{
 .section-heading__subtitle{
     clear:both;
     float:left;
-    font-weight: 600;
+    font-weight: 400;
     color: #ccc;
 }
 
@@ -134,8 +134,8 @@ section:first-of-type{
 }
 
 .artist-image{
-    width: 172px;
-    height: 172px;
+    width: 144px;
+    height: 144px;
     background-color: #ccc;
     box-shadow: 0px 8px 24px rgba(0,0,0,0.12);
 }
