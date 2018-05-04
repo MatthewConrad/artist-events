@@ -1,27 +1,28 @@
-html, body{
-    width:100vw;
-    height:100vh;
+html,
+body {
+    width: 100vw;
+    height: 100vh;
 }
 
 body {
     color: #fff;
-    font-family:'Muli';
+    font-family: 'Muli';
     background: linear-gradient(180deg, rgba(154, 3, 30, 0.5) 0%, #181818 54.7%);
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
-.background{
-    width:100vw;
+.background {
+    width: 100vw;
     height: 100vh;
 }
 
-.content-wrapper{
+.content-wrapper {
     width: 1200px;
     margin: 0 auto;
 }
 
-.header-btn{
+.header-btn {
     font-weight: 600;
     margin: 0 12px;
 
@@ -38,39 +39,62 @@ body {
     padding: 12px;
 }
 
-.btn__flat {
+.btn-flat {
     color: #ccc;
+}
+
+.btn-primary {
+    background-color: #3F2E56;
+    border-radius: 48px;
+    line-height: 16px;
+    padding: 16px 32px;
+}
+
+.btn-warning {
+    display: inline-block;
+    position: relative;
+    top: 4px;
+    width: 36px;
+    height: 36px;
+    
+    font-size: 24px;
+    line-height: 36px;
+    text-align: center;
+    
+    border-radius: 24px;
+    border: 2px solid #ccc;
+    padding: 0;
 }
 
 header {
     width: 100%;
-    height:72px;
+    height: 72px;
     background-color: rgba(5, 5, 5, .2);
 }
 
-.user-info{
+.user-info {
     float: left;
 }
 
-.user-info__picture{
+.user-info__picture {
     float: left;
     margin: 12px 0;
     height: 48px;
     width: 48px;
-    border-radius:48px;
+    border-radius: 48px;
     background-color: #ccc;
 }
 
-.user-info__text{
+.user-info__text {
     float: left;
     padding: 16px;
 }
 
-.user-info__name{
-    font-weight:700;
+.user-info__name {
+    font-weight: 700;
 }
 
-.user-info__location{
+.user-info__location {
     font-weight: 400;
     color: #ccc;
 }
@@ -79,73 +103,161 @@ header {
     float: right;
 }
 
-.actions > .header-btn{
+.actions>.header-btn {
     float: left;
     line-height: 72px;
 }
 
 section {
-    width:100%;
-    margin-top:24px;
+    width: 100%;
+    margin-top: 24px;
 }
 
-section:first-of-type{
-    margin-top:48px;
+section:first-of-type {
+    margin-top: 48px;
 }
 
-.section-heading{
-    display:inline-block;
-    width:100%;
+.section-heading {
+    display: inline-block;
+    width: 100%;
 }
 
-.section-heading + *{
-    clear:both;
+.section-heading+* {
+    clear: both;
 }
 
-.section-heading__title{
-    float:left;
+.section-heading__title {
+    float: left;
     font-size: 36px;
     font-weight: 900;
 }
 
-.section-heading__subtitle{
-    clear:both;
-    float:left;
+.section-heading__subtitle {
+    clear: both;
+    float: left;
     font-weight: 400;
     color: #ccc;
 }
 
-.section-heading > .btn {
+.section-heading>.btn {
     float: right;
 }
 
-.artist-list{
+.artist-list {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
     align-content: flex-start;
 
-    margin-top:24px;
+    margin-top: 24px;
 }
 
-.artist{
-    margin-right:24px;
-    margin-bottom:24px;
+.artist {
+    margin-right: 24px;
+    margin-bottom: 24px;
 }
 
-.artist-image{
+.artist-image {
     width: 144px;
     height: 144px;
     background-color: #ccc;
-    box-shadow: 0px 8px 24px rgba(0,0,0,0.12);
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-.artist-name{
-    padding-top:12px;
-    
+.artist-name {
+    padding-top: 12px;
+
     font-weight: 600px;
     text-align: center;
 
     color: #ccc;
+}
 
+.events-list {
+    list-style: none;
+    padding: 0;
+}
+
+.event {
+    width: 100%;
+    height: 96px;
+    border-bottom: 2px solid #585858;
+}
+
+.event:last-of-type{
+    border: none;
+}
+
+.event:hover{
+    background-color: #202020;
+}
+
+.event-date {
+    float: left;
+    text-align: center;
+    margin-right: 48px;
+    padding-top: 24px;
+}
+
+.event-date__month {
+    color: #ccc;
+    text-transform: uppercase;
+}
+
+.event-date__day {
+    font-size: 32px;
+    font-weight: 900;
+}
+
+.event-info {}
+
+.event-info__name {
+    float: left;
+    font-size: 32px;
+    font-weight: 900;
+    padding-top: 36px;
+}
+
+.event-info__name::after {
+    content: "\2022";
+    color: #585858;
+    font-size: 24px;
+    margin: 0 24px;
+    position: relative;
+    top: -4px;
+}
+
+.event-info__headliner {
+    float: left;
+    font-size: 24px;
+    margin-top: -8px;
+}
+
+.event-info__supporting {
+    float: left;
+    clear: left;
+    font-size: 16px;
+    font-weight: 500;
+    color: #ccc;
+}
+
+.event-info__location {
+    float: left;
+    padding-top: 42px;
+    font-size: 24px;
+    color: #ccc;
+
+}
+
+.event-buttons {
+    float: right;
+    line-height: 96px;
+}
+
+.event-buttons > * {
+    margin: 0 12px;
+}
+
+.event-buttons > *:last-of-type {
+    margin: 0 0 0 12px;
 }
