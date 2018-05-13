@@ -32,51 +32,8 @@
 					<div class="section-heading__title">Your Artists</div>
 					<a href="#" class="btn btn-flat">Manage on Spotify</a>
 				</div>
-				<div class="artist-list">
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/02da1cea278519573085a472a23ce90d6ea2046d');" ></div>
-						<div class="artist-name">Jukebox the Ghost</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/7ad2128db73a2814a1a96498404a5d9aabb4c15c');" ></div>
-						<div class="artist-name">Muse</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/f0f7d034ecb1c560461c0f7c72ade9d9a6dfd3d5');" ></div>
-						<div class="artist-name">Joywave</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/8084d31266ac4e8dc73dd2b144a286ca6ec86542');" ></div>
-						<div class="artist-name">Saint Motel</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/e71f9ba6573c95041ecd71f766788668f1ceb998');" ></div>
-						<div class="artist-name">Panic! at the Disco</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/6875a88371bd731ca6f032c014e7c0ef40bbfc0e');" ></div>
-						<div class="artist-name">Twenty One Pilots</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/e9050ef075e509b5363a2414192800b98fa1fe43');" ></div>
-						<div class="artist-name">Coleman Hell</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/3393cc9053696bea5592227722e1c0c001ad9722');" ></div>
-						<div class="artist-name">St. Lucia</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/f3da11c343f1e6c4f2b525b01c5996dea20542a2');" ></div>
-						<div class="artist-name">Glass Animals</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/749e488c5f419dfeafff58947d021733e1c753a9');" ></div>
-						<div class="artist-name">Misterwives</div>
-					</div>
-					<div class="artist">
-						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/ef4d68439d71851fc51d505a503a7a8beb81ffd0');" ></div>
-						<div class="artist-name">WALK THE MOON</div>
-					</div>
+				<div class="artist-list" id="user-artists">
+					You don't follow any artists on Spotify yet!
 				</div>
 			</section>
 			<section id="upcoming-events">
@@ -198,6 +155,12 @@
         </div>
 	</script>
 
+	<script id="user-artists-template" type="text/x-handlebars-template">
+      <a href="{{external_urls.spotify}}" target="_blank" class="artist">
+        <div class="artist-image" style="background-image:url('{{images.1.url}}');"></div>
+        <div class="artist-name">{{name}}</div>
+    </script>
+
 	<script id="oauth-template" type="text/x-handlebars-template">
 		<h2>oAuth info</h2>
 		<dl class="dl-horizontal">
@@ -229,6 +192,10 @@
             userInfoTemplate = Handlebars.compile(userInfoSource),
             userInfoPlaceholder = document.getElementById('user-info');
 
+        var userArtistsSource = document.getElementById('user-artists-template').innerHTML,
+            userArtistsTemplate = Handlebars.compile(userArtistsSource),
+            userArtistsPlaceholder = document.getElementById('user-artists');
+
         var oauthSource = document.getElementById('oauth-template').innerHTML,
             oauthTemplate = Handlebars.compile(oauthSource),
             oauthPlaceholder = document.getElementById('oauth');
@@ -259,6 +226,27 @@
 
                   $('#login').hide();
                   $('#loggedin').show();
+                }
+            });
+
+            $.ajax({
+                url: 'https://api.spotify.com/v1/me/following?type=artist',
+                headers:{
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response){
+                	var artists = response.artists.items;
+                	artists.sort(function(a, b){
+                		if(a.name < b.name) return -1;
+                		else if(a.name > b.name) return 1;
+                		else return 0;
+                	});
+                	if(artists.length > 0){
+		              	userArtistsPlaceholder.innerHTML = "";
+		              	for(var i = 0; i < artists.length; i++){
+		                    userArtistsPlaceholder.innerHTML += userArtistsTemplate(artists[i]);
+		                }
+	            	}
                 }
             });
 
