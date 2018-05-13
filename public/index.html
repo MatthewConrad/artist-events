@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Artist Events</title>
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,600,700,900" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<body>
+	<div id="login">
+        <h1>This is an example of the Authorization Code flow</h1>
+        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+    </div>
+    <div id="loggedin">
+	    <header>
+	        <div class="content-wrapper">
+	            <div class="user-info" id="user-info"></div>
+	            <div class="actions">
+	                <a href="#" class="header-btn">Change Location</a>
+					<a href="#" class="header-btn">Logout</a>
+				</div>
+			</div>
+		</header>
+		<div class="body-content">
+		<div class="content-wrapper">
+			<section id="artists">
+				<div class="section-heading">
+					<div class="section-heading__title">Your Artists</div>
+					<a href="#" class="btn btn-flat">Manage on Spotify</a>
+				</div>
+				<div class="artist-list">
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/02da1cea278519573085a472a23ce90d6ea2046d');" ></div>
+						<div class="artist-name">Jukebox the Ghost</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/7ad2128db73a2814a1a96498404a5d9aabb4c15c');" ></div>
+						<div class="artist-name">Muse</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/f0f7d034ecb1c560461c0f7c72ade9d9a6dfd3d5');" ></div>
+						<div class="artist-name">Joywave</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/8084d31266ac4e8dc73dd2b144a286ca6ec86542');" ></div>
+						<div class="artist-name">Saint Motel</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/e71f9ba6573c95041ecd71f766788668f1ceb998');" ></div>
+						<div class="artist-name">Panic! at the Disco</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/6875a88371bd731ca6f032c014e7c0ef40bbfc0e');" ></div>
+						<div class="artist-name">Twenty One Pilots</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/e9050ef075e509b5363a2414192800b98fa1fe43');" ></div>
+						<div class="artist-name">Coleman Hell</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/3393cc9053696bea5592227722e1c0c001ad9722');" ></div>
+						<div class="artist-name">St. Lucia</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/f3da11c343f1e6c4f2b525b01c5996dea20542a2');" ></div>
+						<div class="artist-name">Glass Animals</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/749e488c5f419dfeafff58947d021733e1c753a9');" ></div>
+						<div class="artist-name">Misterwives</div>
+					</div>
+					<div class="artist">
+						<div class="artist-image" style="background-image:url('https://i.scdn.co/image/ef4d68439d71851fc51d505a503a7a8beb81ffd0');" ></div>
+						<div class="artist-name">WALK THE MOON</div>
+					</div>
+				</div>
+			</section>
+			<section id="upcoming-events">
+				<div class="section-heading">
+					<div class="section-heading__title">Upcoming Events</div>
+					<div class="section-heading__subtitle">Near Columbus, Ohio</div>
+				</div>
+				<ul class="events-list">
+					<li class="event">
+						<div class="event-date">
+							<div class="event-date__month">May</div>
+							<div class="event-date__day">11</div>
+						</div>
+						<div class="event-info">
+							<div class="event-info__name">Misterwives</div>
+							<div class="event-info__location">Newport Music Hall, 7:00pm</div>
+						</div>
+						<div class="event-buttons">
+							<a href="#" class="btn btn-primary">Buy Tickets</a>
+						</div>
+					</li>
+					<li class="event">
+						<div class="event-date">
+							<div class="event-date__month">Jun</div>
+							<div class="event-date__day">15</div>
+						</div>
+						<div class="event-info">
+							<div class="event-info__name">WALK THE MOON</div>
+							<div class="event-info__location">Express Live!, 6:30pm</div>
+						</div>
+						<div class="event-buttons">
+							<a href="#" class="btn btn-primary">Buy Tickets</a>
+						</div>
+					</li>
+					<li class="event">
+						<div class="event-date">
+							<div class="event-date__month">Jun</div>
+							<div class="event-date__day">16</div>
+						</div>
+						<div class="event-info">
+							<div class="event-info__name">
+								<div class="event-info__headliner">30 Seconds to Mars</div>
+								<div class="event-info__supporting">Joywave, Misterwives, WALK THE MOON</div>
+							</div>
+							<div class="event-info__location">Blossom Music Center, 6:00pm</div>
+						</div>
+						<div class="event-buttons">
+							<a href="#" class="btn btn-flat btn-warning">!</a>
+							<a href="#" class="btn btn-primary">Buy Tickets</a>
+						</div>
+					</li>
+					<li class="event">
+						<div class="event-date">
+							<div class="event-date__month">Jul</div>
+							<div class="event-date__day">15</div>
+						</div>
+						<div class="event-info">
+							<div class="event-info__name">Panic! at the Disco</div>
+							<div class="event-info__location">Nationwide Arena, 7:00pm</div>
+						</div>
+						<div class="event-buttons">
+							<a href="#" class="btn btn-primary">Buy Tickets</a>
+						</div>
+					</li>
+				</ul>
+			</section>
+			<section id="recommended-events">
+				<div class="section-heading">
+					<div class="section-heading__title">Recommended</div>
+					<div class="section-heading__subtitle">Concerts that you might be interested in</div>
+				</div>
+				<ul class="events-list">
+					<li class="event">
+						<div class="event-date">
+							<div class="event-date__month">May</div>
+							<div class="event-date__day">20</div>
+						</div>
+						<div class="event-info">
+							<div class="event-info__name">Portugal. The Man</div>
+							<div class="event-info__location">Express Live!, 7:00pm</div>
+						</div>
+						<div class="event-buttons">
+							<a href="#" class="btn btn-primary">Buy Tickets</a>
+						</div>
+					</li>
+					<li class="event">
+						<div class="event-date">
+							<div class="event-date__month">Sep</div>
+							<div class="event-date__day">09</div>
+						</div>
+						<div class="event-info">
+							<div class="event-info__name">Fall Out Boy</div>
+							<div class="event-info__location">Nationwide Arena, 7:00pm</div>
+						</div>
+						<div class="event-buttons">
+							<a href="#" class="btn btn-primary">Buy Tickets</a>
+						</div>
+					</li>
+				</ul>
+			</section>
+			<div id="oauth">
+    		</div>
+	        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+		</div>
+		</div>
+	</div>
+
+	<script id="user-info-template" type="text/x-handlebars-template">
+		<div class="user-info__picture" style="background-image:url('{{images.0.url}}');"></div>
+        <div class="user-info__text">
+            <div class="user-info__name">
+            	{{#if display_name}}
+	            	{{display_name}}
+	            {{else}}
+	            	{{id}}
+            	{{/if}}
+        	</div>
+            <div class="user-info__location">Columbus, OH</div>
+        </div>
+	</script>
+
+	<script id="oauth-template" type="text/x-handlebars-template">
+		<h2>oAuth info</h2>
+		<dl class="dl-horizontal">
+			<dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
+			<dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
+		</dl>
+	</script>
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script>
+	(function() {
+
+        /**
+         * Obtains parameters from the hash of the URL
+         * @return Object
+         */
+        function getHashParams() {
+        	var hashParams = {};
+        	var e, r = /([^&;=]+)=?([^&;]*)/g,
+            	q = window.location.hash.substring(1);
+        	while ( e = r.exec(q)) {
+            	hashParams[e[1]] = decodeURIComponent(e[2]);
+        	}
+        	return hashParams;
+        }
+
+        var userInfoSource = document.getElementById('user-info-template').innerHTML,
+            userInfoTemplate = Handlebars.compile(userInfoSource),
+            userInfoPlaceholder = document.getElementById('user-info');
+
+        var oauthSource = document.getElementById('oauth-template').innerHTML,
+            oauthTemplate = Handlebars.compile(oauthSource),
+            oauthPlaceholder = document.getElementById('oauth');
+
+        var params = getHashParams();
+
+        var access_token = params.access_token,
+            refresh_token = params.refresh_token,
+            error = params.error;
+
+        if (error) {
+          alert('There was an error during the authentication');
+        } else {
+          if (access_token) {
+            // render oauth info
+            oauthPlaceholder.innerHTML = oauthTemplate({
+              access_token: access_token,
+              refresh_token: refresh_token
+            });
+
+            $.ajax({
+                url: 'https://api.spotify.com/v1/me',
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+                },
+                success: function(response) {
+                  userInfoPlaceholder.innerHTML = userInfoTemplate(response);
+
+                  $('#login').hide();
+                  $('#loggedin').show();
+                }
+            });
+
+          } else {
+              // render initial screen
+              $('#login').show();
+              $('#loggedin').hide();
+          }
+
+          document.getElementById('obtain-new-token').addEventListener('click', function() {
+            $.ajax({
+              url: '/refresh_token',
+              data: {
+                'refresh_token': refresh_token
+              }
+            }).done(function(data) {
+              access_token = data.access_token;
+              oauthPlaceholder.innerHTML = oauthTemplate({
+                access_token: access_token,
+                refresh_token: refresh_token
+              });
+            });
+          }, false);
+        }
+      })();
+	</script>
+
+</body>
+</html>
