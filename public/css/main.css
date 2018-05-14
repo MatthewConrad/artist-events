@@ -192,8 +192,9 @@ section:first-of-type {
 }
 
 .event {
+    display:inline-block;
     width: 100%;
-    height: 96px;
+    min-height: 96px;
     padding: 0 16px;
     border-bottom: 2px solid #585858;
 }
@@ -232,15 +233,6 @@ section:first-of-type {
     padding-top: 36px;
 }
 
-.event-info__name::after {
-    content: "\2022";
-    color: #585858;
-    font-size: 24px;
-    margin: 0 24px;
-    position: relative;
-    top: -4px;
-}
-
 .event-info__headliner {
     float: left;
     font-size: 24px;
@@ -260,7 +252,15 @@ section:first-of-type {
     padding-top: 42px;
     font-size: 24px;
     color: #ccc;
+}
 
+.event-info__location::before {
+    content: "\2022";
+    color: #585858;
+    font-size: 24px;
+    margin: 0 24px;
+    position: relative;
+    top: -4px;
 }
 
 .event-buttons {

@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Artist Events</title>
-    <link href="https://fonts.googleapis.com/css?family=Muli:400,600,700,900" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Artist Events</title>
+	<link href="https://fonts.googleapis.com/css?family=Muli:400,600,700,900" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 
 <body>
 	<div id="login">
-        <h1>This is an example of the Authorization Code flow</h1>
-        <a href="/login" class="btn btn-primary">Log in with Spotify</a>
-    </div>
-    <div id="loggedin">
-	    <header>
-	        <div class="content-wrapper">
-	            <div class="user-info" id="user-info"></div>
-	            <div class="actions">
-	                <a href="#" class="header-btn">Change Location</a>
+		<h1>This is an example of the Authorization Code flow</h1>
+		<a href="/login" class="btn btn-primary">Log in with Spotify</a>
+	</div>
+	<div id="loggedin">
+		<header>
+			<div class="content-wrapper">
+				<div class="user-info" id="user-info"></div>
+				<div class="actions">
+					<a href="#" class="header-btn">Change Location</a>
 					<a href="#" class="header-btn">Logout</a>
 				</div>
 			</div>
@@ -41,63 +41,8 @@
 					<div class="section-heading__title">Upcoming Events</div>
 					<div class="section-heading__subtitle">Near Columbus, Ohio</div>
 				</div>
-				<ul class="events-list">
-					<li class="event">
-						<div class="event-date">
-							<div class="event-date__month">May</div>
-							<div class="event-date__day">11</div>
-						</div>
-						<div class="event-info">
-							<div class="event-info__name">Misterwives</div>
-							<div class="event-info__location">Newport Music Hall, 7:00pm</div>
-						</div>
-						<div class="event-buttons">
-							<a href="#" class="btn btn-primary">Buy Tickets</a>
-						</div>
-					</li>
-					<li class="event">
-						<div class="event-date">
-							<div class="event-date__month">Jun</div>
-							<div class="event-date__day">15</div>
-						</div>
-						<div class="event-info">
-							<div class="event-info__name">WALK THE MOON</div>
-							<div class="event-info__location">Express Live!, 6:30pm</div>
-						</div>
-						<div class="event-buttons">
-							<a href="#" class="btn btn-primary">Buy Tickets</a>
-						</div>
-					</li>
-					<li class="event">
-						<div class="event-date">
-							<div class="event-date__month">Jun</div>
-							<div class="event-date__day">16</div>
-						</div>
-						<div class="event-info">
-							<div class="event-info__name">
-								<div class="event-info__headliner">30 Seconds to Mars</div>
-								<div class="event-info__supporting">Joywave, Misterwives, WALK THE MOON</div>
-							</div>
-							<div class="event-info__location">Blossom Music Center, 6:00pm</div>
-						</div>
-						<div class="event-buttons">
-							<a href="#" class="btn btn-flat btn-warning">!</a>
-							<a href="#" class="btn btn-primary">Buy Tickets</a>
-						</div>
-					</li>
-					<li class="event">
-						<div class="event-date">
-							<div class="event-date__month">Jul</div>
-							<div class="event-date__day">15</div>
-						</div>
-						<div class="event-info">
-							<div class="event-info__name">Panic! at the Disco</div>
-							<div class="event-info__location">Nationwide Arena, 7:00pm</div>
-						</div>
-						<div class="event-buttons">
-							<a href="#" class="btn btn-primary">Buy Tickets</a>
-						</div>
-					</li>
+				<ul class="events-list" id="user-events">
+					
 				</ul>
 			</section>
 			<section id="recommended-events">
@@ -135,31 +80,59 @@
 				</ul>
 			</section>
 			<div id="oauth">
-    		</div>
-	        <button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
+			</div>
+			<button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
 		</div>
 		</div>
 	</div>
 
 	<script id="user-info-template" type="text/x-handlebars-template">
 		<div class="user-info__picture" style="background-image:url('{{images.0.url}}');"></div>
-        <div class="user-info__text">
-            <div class="user-info__name">
-            	{{#if display_name}}
-	            	{{display_name}}
-	            {{else}}
-	            	{{id}}
-            	{{/if}}
-        	</div>
-            <div class="user-info__location">Columbus, OH</div>
-        </div>
+		<div class="user-info__text">
+			<div class="user-info__name">
+				{{#if display_name}}
+					{{display_name}}
+				{{else}}
+					{{id}}
+				{{/if}}
+			</div>
+			<div class="user-info__location">Columbus, OH</div>
+		</div>
 	</script>
 
 	<script id="user-artists-template" type="text/x-handlebars-template">
-      <a href="{{external_urls.spotify}}" target="_blank" class="artist">
-        <div class="artist-image" style="background-image:url('{{images.1.url}}');"></div>
-        <div class="artist-name">{{name}}</div>
-    </script>
+	  <a href="{{external_urls.spotify}}" target="_blank" class="artist">
+		<div class="artist-image" style="background-image:url('{{images.1.url}}');"></div>
+		<div class="artist-name">{{name}}</div>
+	</script>
+
+	<script id="events-template" type="text/x-handlebars-template">
+		<li class="event">
+			<div class="event-date">
+				<div class="event-date__month">{{eventMonth}}</div>
+				<div class="event-date__day">{{eventDay}}</div>
+			</div>
+			<div class="event-info">
+				<div class="event-info__name">
+					{{#if hasHeadliner}}
+						<div class="event-info__headliner">{{displayName}}</div>
+						<div class="event-info__supporting">{{supportingAct}}</div>
+					{{else}}
+						{{name}}
+					{{/if}}
+				</div>
+				<div class="event-info__location">
+					{{_embedded.venues.0.name}}, {{eventTime}}
+				</div>
+			</div>
+			<div class="event-buttons">
+				{{#if distanceWarning}}
+					<a href="#" class="btn btn-flat btn-warning">!</a>
+				{{/if}}
+				<a href="{{url}}" target="_blank" class="btn btn-primary">Buy Tickets</a>
+			</div>
+		</li>
+	</script>
 
 	<script id="oauth-template" type="text/x-handlebars-template">
 		<h2>oAuth info</h2>
@@ -172,106 +145,191 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	<script>
-	(function() {
+		var artists = [];
+		var events = [];
+		var recommendedArtists = [];
+		var recommendedEvents = [];
+		var geoPoint = 'dphgr';
+		var tmAPIKey = API_KEY;
 
-        /**
-         * Obtains parameters from the hash of the URL
-         * @return Object
-         */
-        function getHashParams() {
-        	var hashParams = {};
-        	var e, r = /([^&;=]+)=?([^&;]*)/g,
-            	q = window.location.hash.substring(1);
-        	while ( e = r.exec(q)) {
-            	hashParams[e[1]] = decodeURIComponent(e[2]);
-        	}
-        	return hashParams;
-        }
+		(function() {
 
-        var userInfoSource = document.getElementById('user-info-template').innerHTML,
-            userInfoTemplate = Handlebars.compile(userInfoSource),
-            userInfoPlaceholder = document.getElementById('user-info');
+			var userInfoSource = document.getElementById('user-info-template').innerHTML,
+				userInfoTemplate = Handlebars.compile(userInfoSource),
+				userInfoPlaceholder = document.getElementById('user-info');
 
-        var userArtistsSource = document.getElementById('user-artists-template').innerHTML,
-            userArtistsTemplate = Handlebars.compile(userArtistsSource),
-            userArtistsPlaceholder = document.getElementById('user-artists');
+			var userArtistsSource = document.getElementById('user-artists-template').innerHTML,
+				userArtistsTemplate = Handlebars.compile(userArtistsSource),
+				userArtistsPlaceholder = document.getElementById('user-artists');
 
-        var oauthSource = document.getElementById('oauth-template').innerHTML,
-            oauthTemplate = Handlebars.compile(oauthSource),
-            oauthPlaceholder = document.getElementById('oauth');
+			var eventsSource = document.getElementById('events-template').innerHTML,
+				eventsTemplate = Handlebars.compile(eventsSource),
+				userEventsPlaceholder = document.getElementById('user-events');
 
-        var params = getHashParams();
+			var oauthSource = document.getElementById('oauth-template').innerHTML,
+				oauthTemplate = Handlebars.compile(oauthSource),
+				oauthPlaceholder = document.getElementById('oauth');
 
-        var access_token = params.access_token,
-            refresh_token = params.refresh_token,
-            error = params.error;
+			var params = getHashParams();
 
-        if (error) {
-          alert('There was an error during the authentication');
-        } else {
-          if (access_token) {
-            // render oauth info
-            oauthPlaceholder.innerHTML = oauthTemplate({
-              access_token: access_token,
-              refresh_token: refresh_token
-            });
+			var access_token = params.access_token,
+				refresh_token = params.refresh_token,
+				error = params.error;
 
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me',
-                headers: {
-                  'Authorization': 'Bearer ' + access_token
-                },
-                success: function(response) {
-                  userInfoPlaceholder.innerHTML = userInfoTemplate(response);
+			/**
+			 * Obtains parameters from the hash of the URL
+			 * @return Object
+			 */
+			function getHashParams() {
+				var hashParams = {};
+				var e, r = /([^&;=]+)=?([^&;]*)/g,
+					q = window.location.hash.substring(1);
+				while ( e = r.exec(q)) {
+					hashParams[e[1]] = decodeURIComponent(e[2]);
+				}
+				return hashParams;
+			}
 
-                  $('#login').hide();
-                  $('#loggedin').show();
-                }
-            });
+			function getRecommendedArtistsFromTopArtists(){
+				$.ajax({
+					url: 'https://api.spotify.com/v1/me/top/artists',
+					headers:{
+					  'Authorization': 'Bearer ' + access_token
+					},
+					success: function(response){
+						var followedNames = artists.map(x => x.name);
+						var topArtists = response.items;
+						if(topArtists.length > 0){
+							for(var i = 0; i < topArtists.length; i++){
+								if(followedNames.indexOf(topArtists[i].name) == -1) recommendedArtists.push(topArtists[i]);
+							}
+						}
+					}
+				});
+			}
 
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me/following?type=artist',
-                headers:{
-                  'Authorization': 'Bearer ' + access_token
-                },
-                success: function(response){
-                	var artists = response.artists.items;
-                	artists.sort(function(a, b){
-                		if(a.name < b.name) return -1;
-                		else if(a.name > b.name) return 1;
-                		else return 0;
-                	});
-                	if(artists.length > 0){
-		              	userArtistsPlaceholder.innerHTML = "";
-		              	for(var i = 0; i < artists.length; i++){
-		                    userArtistsPlaceholder.innerHTML += userArtistsTemplate(artists[i]);
-		                }
-	            	}
-                }
-            });
+			function getEventsForArtists(artistsList){
+				var today = new Date().toISOString().split('.')[0]+"Z"; // ISO string includes milliseconds but the Ticketmaster API doesn't allow that
+				var eventsHTML = "";
+				for(var i = 0; i < artistsList.length; i++){
+					$.ajax({
+						url: 'https://app.ticketmaster.com/discovery/v2/events?apikey='+tmAPIKey+'&radius=150&unit=miles&countryCode=US&startDateTime='+today+'&geoPoint='+geoPoint+'&keyword='+artistsList[i].name,
+						success: function(response){
+							if(response._embedded){
+								var eventList = response._embedded.events;
+								eventList.sort(function(a, b){
+									var aDate = new Date(a.dates.start.dateTime);
+									var bDate = new Date(b.dates.start.dateTime);
+									if(aDate < bDate) return -1;
+									else if(aDate > bDate) return 1;
+									else return 0;
+								});
+								for(var j = 0; j < eventList.length; j++){
+									// need to set some extra attributes to make templating easier
+									var event = eventList[j];
+									var eventIds = events.map(x => x.id);
+									if(eventIds.indexOf(event.id) == -1){
+										var eventDate = new Date(event.dates.start.dateTime).toDateString().split(" ");
+										event.eventMonth = eventDate[1];
+										event.eventDay = eventDate[2];
+										event.eventTime = new Date(event.dates.start.dateTime).toLocaleTimeString().split(":00 ").join("").toLowerCase();
 
-          } else {
-              // render initial screen
-              $('#login').show();
-              $('#loggedin').hide();
-          }
+										if(event.distance > 50) event.distanceWarning = true;
 
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function(data) {
-              access_token = data.access_token;
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-            });
-          }, false);
-        }
-      })();
+										var searchedName = response._links.self.href.split('&keyword=')[1].split('&')[0].split('+').join(" ");
+										var attractions = event._embedded.attractions;
+										if(event.name.toLowerCase().indexOf(searchedName.toLowerCase()) == -1 || attractions.length > 1){
+											event.hasHeadliner = true;
+											var supportingAct = "";
+											for(var k = 1; (k < attractions.length && k < 4); k++){
+												if(k > 1) supportingAct += ", ";
+												supportingAct += attractions[k].name;
+											}
+											if(attractions.length > 4) supportingAct += ". . .";
+											event.supportingAct = supportingAct;
+										}else event.hasHeadliner = false;
+
+										event.displayName = event._embedded.attractions[0].name;
+
+										userEventsPlaceholder.innerHTML += eventsTemplate(event);
+										events.push(event);
+									}
+								}
+							}
+						}
+					});
+				}
+			}
+
+			if (error) {
+			  alert('There was an error during the authentication');
+			} else {
+			  if (access_token) {
+				// render oauth info
+				oauthPlaceholder.innerHTML = oauthTemplate({
+				  access_token: access_token,
+				  refresh_token: refresh_token
+				});
+
+				$.ajax({
+					url: 'https://api.spotify.com/v1/me',
+					headers: {
+					  'Authorization': 'Bearer ' + access_token
+					},
+					success: function(response) {
+					  userInfoPlaceholder.innerHTML = userInfoTemplate(response);
+
+					  $('#login').hide();
+					  $('#loggedin').show();
+					}
+				});
+
+				$.ajax({
+					url: 'https://api.spotify.com/v1/me/following?type=artist',
+					headers:{
+					  'Authorization': 'Bearer ' + access_token
+					},
+					success: function(response){
+						artists = response.artists.items;
+						artists.sort(function(a, b){
+							if(a.name < b.name) return -1;
+							else if(a.name > b.name) return 1;
+							else return 0;
+						});
+						if(artists.length > 0){
+							userArtistsPlaceholder.innerHTML = "";
+							for(var i = 0; i < artists.length; i++){
+								userArtistsPlaceholder.innerHTML += userArtistsTemplate(artists[i]);
+							}
+						}
+
+						getEventsForArtists(artists);
+						getRecommendedArtistsFromTopArtists();
+					}
+				});
+
+			  } else {
+				  // render initial screen
+				  $('#login').show();
+				  $('#loggedin').hide();
+			  }
+
+			  document.getElementById('obtain-new-token').addEventListener('click', function() {
+				$.ajax({
+				  url: '/refresh_token',
+				  data: {
+					'refresh_token': refresh_token
+				  }
+				}).done(function(data) {
+				  access_token = data.access_token;
+				  oauthPlaceholder.innerHTML = oauthTemplate({
+					access_token: access_token,
+					refresh_token: refresh_token
+				  });
+				});
+			  }, false);
+			}
+		  })();
 	</script>
 
 </body>
