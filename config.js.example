@@ -1,0 +1,6 @@
+module.exports = {
+    'client_id': CLIENT_ID, // Your Spotify client id
+    'client_secret': CLIENT_SECRET, // Your Spotify secret
+    'redirect_uri': REDIRECT_URI, // Your Spotify redirect uri
+    'tm_api_key': API_KEY // Your Ticketmaster API key
+}

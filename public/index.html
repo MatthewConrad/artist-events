@@ -150,7 +150,6 @@
 		var recommendedArtists = [];
 		var recommendedEvents = [];
 		var geoPoint = 'dphgr';
-		var tmAPIKey = API_KEY;
 
 		(function() {
 
@@ -209,56 +208,33 @@
 			}
 
 			function getEventsForArtists(artistsList){
-				var today = new Date().toISOString().split('.')[0]+"Z"; // ISO string includes milliseconds but the Ticketmaster API doesn't allow that
-				var eventsHTML = "";
-				for(var i = 0; i < artistsList.length; i++){
-					$.ajax({
-						url: 'https://app.ticketmaster.com/discovery/v2/events?apikey='+tmAPIKey+'&radius=150&unit=miles&countryCode=US&startDateTime='+today+'&geoPoint='+geoPoint+'&keyword='+artistsList[i].name,
-						success: function(response){
-							if(response._embedded){
-								var eventList = response._embedded.events;
-								eventList.sort(function(a, b){
-									var aDate = new Date(a.dates.start.dateTime);
-									var bDate = new Date(b.dates.start.dateTime);
-									if(aDate < bDate) return -1;
-									else if(aDate > bDate) return 1;
-									else return 0;
-								});
-								for(var j = 0; j < eventList.length; j++){
-									// need to set some extra attributes to make templating easier
-									var event = eventList[j];
-									var eventIds = events.map(x => x.id);
-									if(eventIds.indexOf(event.id) == -1){
-										var eventDate = new Date(event.dates.start.dateTime).toDateString().split(" ");
-										event.eventMonth = eventDate[1];
-										event.eventDay = eventDate[2];
-										event.eventTime = new Date(event.dates.start.dateTime).toLocaleTimeString().split(":00 ").join("").toLowerCase();
-
-										if(event.distance > 50) event.distanceWarning = true;
-
-										var searchedName = response._links.self.href.split('&keyword=')[1].split('&')[0].split('+').join(" ");
-										var attractions = event._embedded.attractions;
-										if(event.name.toLowerCase().indexOf(searchedName.toLowerCase()) == -1 || attractions.length > 1){
-											event.hasHeadliner = true;
-											var supportingAct = "";
-											for(var k = 1; (k < attractions.length && k < 4); k++){
-												if(k > 1) supportingAct += ", ";
-												supportingAct += attractions[k].name;
-											}
-											if(attractions.length > 4) supportingAct += ". . .";
-											event.supportingAct = supportingAct;
-										}else event.hasHeadliner = false;
-
-										event.displayName = event._embedded.attractions[0].name;
-
-										userEventsPlaceholder.innerHTML += eventsTemplate(event);
-										events.push(event);
-									}
-								}
-							}
-						}
+				$.ajax({
+				  url: '/events',
+				  data: {
+					'artists': JSON.stringify(artistsList.map(x => x.name)),
+					'geoPoint': geoPoint
+				  }
+				}).done(function(data) {
+					var eventList = data.events;
+					console.log(eventList);
+					eventList.sort(function(a, b){
+						var aDate = new Date(a.dates.start.dateTime);
+						var bDate = new Date(b.dates.start.dateTime);
+						if(aDate < bDate) return -1;
+						else if(aDate > bDate) return 1;
+						else return 0;
 					});
-				}
+					for(var i = 0; i < eventList.length; i++){
+						var event = eventList[i];
+
+						// server side, the time stuff gets messed up, so doing it here instead
+						var eventDate = new Date(event.dates.start.dateTime).toDateString().split(" ");
+						event.eventMonth = eventDate[1];
+						event.eventDay = eventDate[2];
+						event.eventTime = new Date(event.dates.start.dateTime).toLocaleTimeString().split(":00 ").join("").toLowerCase();
+						userEventsPlaceholder.innerHTML += eventsTemplate(event);
+					}
+				});
 			}
 
 			if (error) {

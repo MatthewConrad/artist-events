@@ -9,12 +9,15 @@
 
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
+var async = require('async');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var config = require('./config.js');
 
-var client_id = CLIENT_ID; // Your client id
-var client_secret = CLIENT_SECRET; // Your secret
-var redirect_uri = CALLBACK_URI; // Your redirect uri
+var client_id = config.client_id;
+var client_secret = config.client_secret;
+var redirect_uri = config.redirect_uri;
+var tmAPIKey = config.tm_api_key;
 
 /**
  * Generates a random string containing numbers and letters
@@ -44,7 +47,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-follow-read user-read-private user-read-email';
+  var scope = 'user-top-read user-follow-read user-read-private user-read-email';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -123,7 +126,7 @@ app.get('/refresh_token', function(req, res) {
   var refresh_token = req.query.refresh_token;
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
-    headers: { 'Authorization': 'Bearer ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+    headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
     form: {
       grant_type: 'refresh_token',
       refresh_token: refresh_token
@@ -139,6 +142,64 @@ app.get('/refresh_token', function(req, res) {
       });
     }
   });
+});
+
+app.get('/events', function(req, res){
+	var artists = JSON.parse(req.query.artists);
+	var geoPoint = req.query.geoPoint;
+	var today = new Date().toISOString().split('.')[0]+"Z";
+
+	var events = [];
+	async.each(artists, function(artist, callback){
+		var eventsOptions = {
+			url: 'https://app.ticketmaster.com/discovery/v2/events?apikey='+tmAPIKey+'&radius=150&unit=miles&countryCode=US&startDateTime='+today+'&geoPoint='+geoPoint+'&keyword='+artist,
+			json: true
+		};
+
+		request.get(eventsOptions, function(error, response, body){
+			if(body._embedded){
+				var eventList = body._embedded.events;
+				for(var j = 0; j < eventList.length; j++){
+					// need to set some extra attributes to make templating easier
+					var event = eventList[j];
+					var eventIds = events.map(x => x.id);
+					if(eventIds.indexOf(event.id) == -1){
+						if(event.distance > 50) event.distanceWarning = true;
+
+						var searchedName = body._links.self.href.split('&keyword=')[1].split('&')[0].split('+').join(" ");
+						var attractions = event._embedded.attractions;
+						if(event.name.toLowerCase().indexOf(searchedName.toLowerCase()) == -1 || attractions.length > 1){
+							event.hasHeadliner = true;
+							var supportingAct = "";
+							for(var k = 1; (k < attractions.length && k < 4); k++){
+								if(k > 1) supportingAct += ", ";
+								supportingAct += attractions[k].name;
+							}
+							if(attractions.length > 4) supportingAct += ". . .";
+							event.supportingAct = supportingAct;
+						}else event.hasHeadliner = false;
+
+						event.displayName = event._embedded.attractions[0].name;
+						events.push(event);
+					}
+				}
+			}
+			callback();
+		});
+
+	}, function(err){
+		if(err){
+			console.log('A call to the Ticketmaster API caused an error.');
+			res.send({
+				'error': 'A call to the Ticketmaster API caused an error.'
+			});
+		}else{
+			res.send({
+				'events': events
+			});
+		}
+	});
+
 });
 
 console.log('Listening on 3000');
