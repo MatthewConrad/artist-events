@@ -8,6 +8,7 @@
  */
 
 var express = require('express'); // Express web server framework
+var session = require('express-session');
 var request = require('request'); // "Request" library
 var async = require('async');
 var querystring = require('querystring');
@@ -34,15 +35,11 @@ var generateRandomString = function(length) {
   return text;
 };
 
-var stateKey = 'spotify_auth_state';
-
-var app = express();
-
-app.use(express.static(__dirname + '/public'))
-   .use(cookieParser());
-
-app.get('/login', function(req, res) {
-
+/**
+ * Redirects request to authorize the application through Spotify.
+ * @param res The Express response object
+ */
+var loginWithSpotify = function(res) {
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -56,7 +53,35 @@ app.get('/login', function(req, res) {
       redirect_uri: redirect_uri,
       state: state
     }));
+}
+
+var stateKey = 'spotify_auth_state';
+
+var app = express();
+app.use(session({
+  secret:'sample-secret',
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use(function(req, res, next){
+  if(req.url.indexOf('/css') == -1 && req.url.indexOf('/callback') == -1){
+    var currentTime = new Date().getTime();
+    console.log(req.url);
+    if(!req.session.access_token){
+      loginWithSpotify(res);
+    }else if((currentTime + (60 * 60)) >= req.session.access_token_expiry){
+      console.log('token is about to or has expired!');
+    }else{
+      next();
+    }
+  }else{
+    next();
+  }
 });
+
+app.use(express.static(__dirname + '/public'))
+   .use(cookieParser());
 
 app.get('/callback', function(req, res) {
 
@@ -92,6 +117,10 @@ app.get('/callback', function(req, res) {
 
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
+
+        req.session.access_token = access_token;
+        req.session.access_token_expiry = (new Date().getTime()) + (1 * 60 * 60 * 1000); // access token will expire in one hour
+        req.session.refresh_token = refresh_token;
 
         var options = {
           url: 'https://api.spotify.com/v1/me',
@@ -144,7 +173,43 @@ app.get('/refresh_token', function(req, res) {
   });
 });
 
-app.get('/events', function(req, res){
+app.get('/get/profile', function(req, res){
+  var profileOptions = {
+    url: 'https://api.spotify.com/v1/me',
+    headers:{
+      'Authorization': 'Bearer ' + req.session.access_token
+    },
+    json: true
+  };
+
+  request.get(profileOptions, function(error, response, body){
+    if(!error && response.statusCode === 200){
+      res.send({
+        'user': body
+      });
+    }
+  });
+});
+
+app.get('/get/artists', function(req, res){
+  var artistOptions = {
+    url: 'https://api.spotify.com/v1/me/following?type=artist',
+    headers:{
+      'Authorization': 'Bearer ' + req.session.access_token
+    },
+    json: true
+  };
+
+  request.get(artistOptions, function(error, response, body){
+    if(!error && response.statusCode === 200){
+      res.send({
+        'artists': body.artists.items
+      });
+    }
+  });
+});
+
+app.get('/get/events', function(req, res){
 	var artists = JSON.parse(req.query.artists);
 	var geoPoint = req.query.geoPoint;
 	var today = new Date().toISOString().split('.')[0]+"Z";
