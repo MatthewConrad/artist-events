@@ -11,21 +11,16 @@
 </head>
 
 <body>
-	<div id="login">
-		<h1>This is an example of the Authorization Code flow</h1>
-		<a href="/login" class="btn btn-primary">Log in with Spotify</a>
-	</div>
-	<div id="loggedin">
-		<header>
-			<div class="content-wrapper">
-				<div class="user-info" id="user-info"></div>
-				<div class="actions">
-					<a href="#" class="header-btn">Change Location</a>
-					<a href="#" class="header-btn">Logout</a>
-				</div>
+	<header>
+		<div class="content-wrapper">
+			<div class="user-info" id="user-info"></div>
+			<div class="actions">
+				<a href="#" class="header-btn">Change Location</a>
+				<a href="#" class="header-btn">Logout</a>
 			</div>
-		</header>
-		<div class="body-content">
+		</div>
+	</header>
+	<div class="body-content">
 		<div class="content-wrapper">
 			<section id="artists">
 				<div class="section-heading">
@@ -42,7 +37,31 @@
 					<div class="section-heading__subtitle">Near Columbus, Ohio</div>
 				</div>
 				<ul class="events-list" id="user-events">
-					
+					<li class="event">
+						<div class="event-date loading-mask"></div>
+						<div class="event-info loading-mask"></div>
+						<div class="event-buttons loading-mask"></div>
+					</li>
+					<li class="event">
+						<div class="event-date loading-mask"></div>
+						<div class="event-info loading-mask"></div>
+						<div class="event-buttons loading-mask"></div>
+					</li>
+					<li class="event">
+						<div class="event-date loading-mask"></div>
+						<div class="event-info loading-mask"></div>
+						<div class="event-buttons loading-mask"></div>
+					</li>
+					<li class="event">
+						<div class="event-date loading-mask"></div>
+						<div class="event-info loading-mask"></div>
+						<div class="event-buttons loading-mask"></div>
+					</li>
+					<li class="event">
+						<div class="event-date loading-mask"></div>
+						<div class="event-info loading-mask"></div>
+						<div class="event-buttons loading-mask"></div>
+					</li>		
 				</ul>
 			</section>
 			<section id="recommended-events">
@@ -50,39 +69,24 @@
 					<div class="section-heading__title">Recommended</div>
 					<div class="section-heading__subtitle">Concerts that you might be interested in</div>
 				</div>
-				<ul class="events-list">
+				<ul class="events-list" id="recommended-events">
 					<li class="event">
-						<div class="event-date">
-							<div class="event-date__month">May</div>
-							<div class="event-date__day">20</div>
-						</div>
-						<div class="event-info">
-							<div class="event-info__name">Portugal. The Man</div>
-							<div class="event-info__location">Express Live!, 7:00pm</div>
-						</div>
-						<div class="event-buttons">
-							<a href="#" class="btn btn-primary">Buy Tickets</a>
-						</div>
+						<div class="event-date loading-mask"></div>
+						<div class="event-info loading-mask"></div>
+						<div class="event-buttons loading-mask"></div>
 					</li>
 					<li class="event">
-						<div class="event-date">
-							<div class="event-date__month">Sep</div>
-							<div class="event-date__day">09</div>
-						</div>
-						<div class="event-info">
-							<div class="event-info__name">Fall Out Boy</div>
-							<div class="event-info__location">Nationwide Arena, 7:00pm</div>
-						</div>
-						<div class="event-buttons">
-							<a href="#" class="btn btn-primary">Buy Tickets</a>
-						</div>
+						<div class="event-date loading-mask"></div>
+						<div class="event-info loading-mask"></div>
+						<div class="event-buttons loading-mask"></div>
+					</li>
+					<li class="event">
+						<div class="event-date loading-mask"></div>
+						<div class="event-info loading-mask"></div>
+						<div class="event-buttons loading-mask"></div>
 					</li>
 				</ul>
 			</section>
-			<div id="oauth">
-			</div>
-			<button class="btn btn-default" id="obtain-new-token">Obtain new token using the refresh token</button>
-		</div>
 		</div>
 	</div>
 
@@ -134,14 +138,6 @@
 		</li>
 	</script>
 
-	<script id="oauth-template" type="text/x-handlebars-template">
-		<h2>oAuth info</h2>
-		<dl class="dl-horizontal">
-			<dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
-			<dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}</dd>
-		</dl>
-	</script>
-
 	<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	<script>
@@ -164,10 +160,6 @@
 			var eventsSource = document.getElementById('events-template').innerHTML,
 				eventsTemplate = Handlebars.compile(eventsSource),
 				userEventsPlaceholder = document.getElementById('user-events');
-
-			var oauthSource = document.getElementById('oauth-template').innerHTML,
-				oauthTemplate = Handlebars.compile(oauthSource),
-				oauthPlaceholder = document.getElementById('oauth');
 
 			var params = getHashParams();
 
@@ -223,6 +215,7 @@
 						else if(aDate > bDate) return 1;
 						else return 0;
 					});
+					userEventsPlaceholder.innerHTML = "";
 					for(var i = 0; i < eventList.length; i++){
 						var event = eventList[i];
 
@@ -239,12 +232,6 @@
 			if (error) {
 			  alert('There was an error during the authentication');
 			} else {
-			  // if (access_token) {
-				// render oauth info
-				// oauthPlaceholder.innerHTML = oauthTemplate({
-				//   access_token: access_token,
-				//   refresh_token: refresh_token
-				// });
 
 				$.ajax({
 					url: '/get/profile',
@@ -276,27 +263,6 @@
 						// getRecommendedArtistsFromTopArtists();
 					}
 				});
-
-			  // } else {
-				 //  // render initial screen
-				 //  $('#login').show();
-				 //  $('#loggedin').hide();
-			  // }
-
-			  document.getElementById('obtain-new-token').addEventListener('click', function() {
-				$.ajax({
-				  url: '/refresh_token',
-				  data: {
-					'refresh_token': refresh_token
-				  }
-				}).done(function(data) {
-				  access_token = data.access_token;
-				  oauthPlaceholder.innerHTML = oauthTemplate({
-					access_token: access_token,
-					refresh_token: refresh_token
-				  });
-				});
-			  }, false);
 			}
 		  })();
 	</script>

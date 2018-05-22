@@ -211,7 +211,7 @@ section:first-of-type {
     float: left;
     text-align: center;
     margin-right: 48px;
-    padding-top: 24px;
+    margin-top: 24px;
 }
 
 .event-date__month {
@@ -274,4 +274,28 @@ section:first-of-type {
 
 .event-buttons > *:last-of-type {
     margin: 0 0 0 12px;
+}
+
+.loading-mask{
+    background-color: #282828;
+    border-radius: 2px;
+}
+
+.event-date.loading-mask{
+    width:40px;
+    height:48px;
+}
+
+.event-info.loading-mask{
+    margin-top:24px;
+    margin-left: 82px;
+    width: 720px;
+    height:48px;
+}
+
+.event-buttons.loading-mask{
+    margin-top:-48px;
+    margin-right:4px;
+    height:48px;
+    width:160px;
 }

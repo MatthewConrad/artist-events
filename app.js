@@ -134,11 +134,7 @@ app.get('/callback', function(req, res) {
         });
 
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
-          }));
+        res.redirect('/');
       } else {
         res.redirect('/#' +
           querystring.stringify({
@@ -240,7 +236,7 @@ app.get('/get/events', function(req, res){
 								if(k > 1) supportingAct += ", ";
 								supportingAct += attractions[k].name;
 							}
-							if(attractions.length > 4) supportingAct += ". . .";
+							if(attractions.length > 4) supportingAct += ", ...";
 							event.supportingAct = supportingAct;
 						}else event.hasHeadliner = false;
 
