@@ -40,6 +40,7 @@ var generateRandomString = function(length) {
  * @param res The Express response object
  */
 var loginWithSpotify = function(res) {
+  console.log('in the auth method!!');
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -55,6 +56,28 @@ var loginWithSpotify = function(res) {
     }));
 }
 
+var refreshSpotifyToken = function(req, res, next){
+  // requesting access token from refresh token
+  var authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+    form: {
+      grant_type: 'refresh_token',
+      refresh_token: req.session.refresh_token
+    },
+    json: true
+  };
+
+  request.post(authOptions, function(error, response, body) {
+    if (!error && response.statusCode === 200) {
+      req.session.access_token = body.access_token;
+      req.session.access_token_expiry = (new Date().getTime()) + (1 * 60 * 60 * 1000);
+      console.log("Refreshed the access token!");
+      next();
+    }
+  });
+}
+
 var stateKey = 'spotify_auth_state';
 
 var app = express();
@@ -65,13 +88,22 @@ app.use(session({
 }));
 
 app.use(function(req, res, next){
-  if(req.url.indexOf('/css') == -1 && req.url.indexOf('/callback') == -1){
+  var intercept = true;
+  var whitelist = ["/css", "/authenticate", "/logout", "/callback", "/?logged_out", "/?error"];
+  whitelist.forEach(function(item, index){
+    if(req.url.indexOf(item) !== -1) intercept = false;
+  })
+
+  if(intercept){
     var currentTime = new Date().getTime();
-    console.log(req.url);
     if(!req.session.access_token){
-      loginWithSpotify(res);
+      res.redirect('/?' +
+        querystring.stringify({
+          logged_out: 'true'
+        }));
     }else if((currentTime + (60 * 60)) >= req.session.access_token_expiry){
       console.log('token is about to or has expired!');
+      refreshSpotifyToken(req, res, next);
     }else{
       next();
     }
@@ -83,6 +115,15 @@ app.use(function(req, res, next){
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
 
+app.get('/authenticate', function(req, res){
+  loginWithSpotify(res);
+});
+
+app.get('/logout', function(req, res){
+  req.session.access_token = null;
+  res.redirect('/');
+})
+
 app.get('/callback', function(req, res) {
 
   // your application requests refresh and access tokens
@@ -93,7 +134,7 @@ app.get('/callback', function(req, res) {
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
   if (state === null || state !== storedState) {
-    res.redirect('/#' +
+    res.redirect('/?' +
       querystring.stringify({
         error: 'state_mismatch'
       }));
@@ -136,37 +177,13 @@ app.get('/callback', function(req, res) {
         // we can also pass the token to the browser to make requests from there
         res.redirect('/');
       } else {
-        res.redirect('/#' +
+        res.redirect('/?' +
           querystring.stringify({
             error: 'invalid_token'
           }));
       }
     });
   }
-});
-
-app.get('/refresh_token', function(req, res) {
-
-  // requesting access token from refresh token
-  var refresh_token = req.query.refresh_token;
-  var authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
-    headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
-    form: {
-      grant_type: 'refresh_token',
-      refresh_token: refresh_token
-    },
-    json: true
-  };
-
-  request.post(authOptions, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-      var access_token = body.access_token;
-      res.send({
-        'access_token': access_token
-      });
-    }
-  });
 });
 
 app.get('/get/profile', function(req, res){
