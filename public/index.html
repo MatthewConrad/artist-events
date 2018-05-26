@@ -13,7 +13,13 @@
 <body>
 	<header>
 		<div class="content-wrapper">
-			<div class="user-info" id="user-info"></div>
+			<div class="user-info" id="user-info">
+				<div class="user-info__picture loading-mask"></div>
+				<div class="user-info__text">
+					<div class="user-info__name loading-mask"></div>
+					<div class="user-info__location loading-mask"></div>
+				</div>
+			</div>
 			<div class="actions">
 				<a href="#" class="header-btn">Change Location</a>
 				<a href="#" class="header-btn">Logout</a>
@@ -28,7 +34,26 @@
 					<a href="#" class="btn btn-flat">Manage on Spotify</a>
 				</div>
 				<div class="artist-list" id="user-artists">
-					You don't follow any artists on Spotify yet!
+					<div class="artist">
+						<div class="artist-image loading-mask"></div>
+						<div class="artist-name loading-mask"></div>
+					</div>
+					<div class="artist">
+						<div class="artist-image loading-mask"></div>
+						<div class="artist-name loading-mask"></div>
+					</div>
+					<div class="artist">
+						<div class="artist-image loading-mask"></div>
+						<div class="artist-name loading-mask"></div>
+					</div>
+					<div class="artist">
+						<div class="artist-image loading-mask"></div>
+						<div class="artist-name loading-mask"></div>
+					</div>
+					<div class="artist">
+						<div class="artist-image loading-mask"></div>
+						<div class="artist-name loading-mask"></div>
+					</div>
 				</div>
 			</section>
 			<section id="upcoming-events">
@@ -108,6 +133,7 @@
 	  <a href="{{external_urls.spotify}}" target="_blank" class="artist">
 		<div class="artist-image" style="background-image:url('{{images.1.url}}');"></div>
 		<div class="artist-name">{{name}}</div>
+	  </a>
 	</script>
 
 	<script id="events-template" type="text/x-handlebars-template">
@@ -162,10 +188,7 @@
 				userEventsPlaceholder = document.getElementById('user-events');
 
 			var params = getHashParams();
-
-			var access_token = params.access_token,
-				refresh_token = params.refresh_token,
-				error = params.error;
+			var error = params.error;
 
 			/**
 			 * Obtains parameters from the hash of the URL
@@ -237,9 +260,6 @@
 					url: '/get/profile',
 					success: function(response) {
 					  userInfoPlaceholder.innerHTML = userInfoTemplate(response.user);
-
-					  $('#login').hide();
-					  $('#loggedin').show();
 					}
 				});
 
