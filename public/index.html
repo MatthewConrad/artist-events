@@ -21,7 +21,7 @@
 				</div>
 			</div>
 			<div class="actions">
-				<a href="#" class="header-btn">Change Location</a>
+				<button onclick="displayLocationModal()" class="header-btn">Change Location</button>
 				<a href="/logout" class="header-btn">Logout</a>
 			</div>
 		</div>
@@ -59,7 +59,7 @@
 			<section id="upcoming-events">
 				<div class="section-heading">
 					<div class="section-heading__title">Upcoming Events</div>
-					<div class="section-heading__subtitle">Near Columbus, Ohio</div>
+					<div id="events-location" class="section-heading__subtitle"></div>
 				</div>
 				<ul class="events-list" id="user-events">
 					<li class="event">
@@ -121,6 +121,16 @@
 			<a href="/authenticate" class="btn btn-primary">Authenticate with Spotify</a>
 		</div>
 	</div>
+	<div class="modal" id="modal-location">
+		<div class="modal-content">
+			<div class="modal-content__title">Set Location</div>
+			<form onsubmit="return lookupLocationByString()">
+				<div id="location-message" class="modal-content__description" style="display:none;">We couldn't get your location from the browser!<br>Please manually set your location instead.</div>
+				<input type="text" id="input-location" name="location">
+				<input type="submit" value="Submit" class="btn btn-primary">
+			</form>
+		</div>
+	</div>
 
 	<script id="user-info-template" type="text/x-handlebars-template">
 		<div class="user-info__picture" style="background-image:url('{{images.0.url}}');"></div>
@@ -132,7 +142,7 @@
 					{{id}}
 				{{/if}}
 			</div>
-			<div class="user-info__location">Columbus, OH</div>
+			<div id="user-location" class="user-info__location"></div>
 		</div>
 	</script>
 
@@ -173,65 +183,113 @@
 
 	<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	<script src="js/latlon-geohash.js"></script>
 	<script>
 		var artists = [];
 		var events = [];
 		var recommendedArtists = [];
 		var recommendedEvents = [];
-		var geoPoint = 'dphgr';
+		var geoPoint = '';
 
-		(function() {
+		var userInfoSource = document.getElementById('user-info-template').innerHTML,
+			userInfoTemplate = Handlebars.compile(userInfoSource),
+			userInfoPlaceholder = document.getElementById('user-info');
 
-			var userInfoSource = document.getElementById('user-info-template').innerHTML,
-				userInfoTemplate = Handlebars.compile(userInfoSource),
-				userInfoPlaceholder = document.getElementById('user-info');
+		var userArtistsSource = document.getElementById('user-artists-template').innerHTML,
+			userArtistsTemplate = Handlebars.compile(userArtistsSource),
+			userArtistsPlaceholder = document.getElementById('user-artists');
 
-			var userArtistsSource = document.getElementById('user-artists-template').innerHTML,
-				userArtistsTemplate = Handlebars.compile(userArtistsSource),
-				userArtistsPlaceholder = document.getElementById('user-artists');
+		var eventsSource = document.getElementById('events-template').innerHTML,
+			eventsTemplate = Handlebars.compile(eventsSource),
+			userEventsPlaceholder = document.getElementById('user-events');
 
-			var eventsSource = document.getElementById('events-template').innerHTML,
-				eventsTemplate = Handlebars.compile(eventsSource),
-				userEventsPlaceholder = document.getElementById('user-events');
+		function displayLocationModal(){
+			document.getElementById('input-location').value = "";
+			document.getElementById('modal-location').setAttribute("style", "display:block;");
+			if(!geoPoint){
+				document.getElementById('location-message').setAttribute("style", "display:block;");
+			}else{
+				document.getElementById('location-message').setAttribute("style", "display:none;");
+			}
+		}
 
-			var params = getHashParams();
-			console.log(params);
-			var error = params.error;
-			var logged_out = params.logged_out;
+		function lookupLocationByString(){
+			var searchString = document.getElementById('input-location').value;
+			$.ajax({
+				url: 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB2k_-4dQQvYOgwwBCPB9oqXxKH9CUA4Q4&address=' + searchString,
+				success: handleMapsResponse
+			});
+			return false;
+		}
 
-			/**
-			 * Obtains parameters from the hash of the URL
-			 * @return Object
-			 */
-			function getHashParams() {
-				var hashParams = {};
-				var e, r = /([^&;=]+)=?([^&;]*)/g,
-					q = window.location.search.substring(1);
-				while ( e = r.exec(q)) {
-					hashParams[e[1]] = decodeURIComponent(e[2]);
-				}
-				return hashParams;
+		function lookupLocationByCoords(coords){
+			$.ajax({
+				url: 'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyB2k_-4dQQvYOgwwBCPB9oqXxKH9CUA4Q4&latlng=' + coords.latitude+","+coords.longitude,
+				success: handleMapsResponse
+			});
+		}
+
+		function handleMapsResponse(response){
+			if(response.status == "OK"){
+				setLocation(response.results[0]);
+				document.getElementById('modal-location').setAttribute("style", "");
+			}
+		}
+
+		function setLocation(location){
+			var coords = location.geometry.location;
+			geoPoint = Geohash.encode(coords.lat, coords.lng, 5);
+			if(artists){
+				getEventsForArtists(artists);
 			}
 
-			function getRecommendedArtistsFromTopArtists(){
-				$.ajax({
-					url: 'https://api.spotify.com/v1/me/top/artists',
-					headers:{
-					  'Authorization': 'Bearer ' + access_token
-					},
-					success: function(response){
-						var followedNames = artists.map(x => x.name);
-						var topArtists = response.items;
-						if(topArtists.length > 0){
-							for(var i = 0; i < topArtists.length; i++){
-								if(followedNames.indexOf(topArtists[i].name) == -1) recommendedArtists.push(topArtists[i]);
-							}
+			var displayComponents = location.formatted_address.split(',');
+			var displayName = '';
+			if(displayComponents.length < 3){
+				displayName = location.formatted_address;
+			}else if(displayComponents.length == 3){
+				displayName = displayComponents[0] + ', ' + displayComponents[1];
+			}else{
+				displayName = displayComponents[1] + ', ' + displayComponents[2].split(' ')[0];
+			}
+			document.getElementById('user-location').innerHTML = displayName;
+			document.getElementById('events-location').innerHTML = "Near " + displayName;
+		}
+
+		/**
+		 * Obtains parameters from the hash of the URL
+		 * @return Object
+		 */
+		function getHashParams() {
+			var hashParams = {};
+			var e, r = /([^&;=]+)=?([^&;]*)/g,
+				q = window.location.search.substring(1);
+			while ( e = r.exec(q)) {
+				hashParams[e[1]] = decodeURIComponent(e[2]);
+			}
+			return hashParams;
+		}
+
+		function getRecommendedArtistsFromTopArtists(){
+			$.ajax({
+				url: 'https://api.spotify.com/v1/me/top/artists',
+				headers:{
+				  'Authorization': 'Bearer ' + access_token
+				},
+				success: function(response){
+					var followedNames = artists.map(x => x.name);
+					var topArtists = response.items;
+					if(topArtists.length > 0){
+						for(var i = 0; i < topArtists.length; i++){
+							if(followedNames.indexOf(topArtists[i].name) == -1) recommendedArtists.push(topArtists[i]);
 						}
 					}
-				});
-			}
+				}
+			});
+		}
 
-			function getEventsForArtists(artistsList){
+		function getEventsForArtists(artistsList){
+			if(geoPoint){
 				$.ajax({
 				  url: '/get/events',
 				  data: {
@@ -259,7 +317,27 @@
 						userEventsPlaceholder.innerHTML += eventsTemplate(event);
 					}
 				});
+			}else{
 			}
+		}
+
+		function handleLocationModal(e){
+			var modal = document.getElementById('modal-location');
+			if(modal.attributes.style.nodeValue == "display:block;" && geoPoint){
+				if(e.keyCode == 27 || e.type == "click" && e.target == this){
+					modal.setAttribute("style","display:none;");
+				}
+			}
+		}
+
+		$(document).keyup(handleLocationModal);
+		$("#modal-location").click(handleLocationModal);
+
+		(function() {
+
+			var params = getHashParams();
+			var error = params.error;
+			var logged_out = params.logged_out;
 
 			if (error) {
 			  alert('There was an error during the authentication');
@@ -267,6 +345,17 @@
 			}else if(logged_out){
 				document.getElementById('modal-logged-out').setAttribute("style","display:block;");
 			} else {
+				if(navigator.geolocation){
+					navigator.geolocation.getCurrentPosition(
+						function(position){
+							lookupLocationByCoords(position.coords);
+						},
+						function(error){
+							displayLocationModal();
+						});
+				}else{
+					displayLocationModal();
+				}
 
 				$.ajax({
 					url: '/get/profile',
@@ -291,7 +380,9 @@
 							}
 						}
 
-						getEventsForArtists(artists);
+						if(geoPoint){
+							getEventsForArtists(artists);
+						}
 						// getRecommendedArtistsFromTopArtists();
 					}
 				});

@@ -40,7 +40,6 @@ var generateRandomString = function(length) {
  * @param res The Express response object
  */
 var loginWithSpotify = function(res) {
-  console.log('in the auth method!!');
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -72,7 +71,6 @@ var refreshSpotifyToken = function(req, res, next){
     if (!error && response.statusCode === 200) {
       req.session.access_token = body.access_token;
       req.session.access_token_expiry = (new Date().getTime()) + (1 * 60 * 60 * 1000);
-      console.log("Refreshed the access token!");
       next();
     }
   });
@@ -89,7 +87,7 @@ app.use(session({
 
 app.use(function(req, res, next){
   var intercept = true;
-  var whitelist = ["/css", "/authenticate", "/logout", "/callback", "/?logged_out", "/?error"];
+  var whitelist = ["/css", "/js", "/authenticate", "/logout", "/callback", "/?logged_out", "/?error"];
   whitelist.forEach(function(item, index){
     if(req.url.indexOf(item) !== -1) intercept = false;
   })
@@ -102,7 +100,6 @@ app.use(function(req, res, next){
           logged_out: 'true'
         }));
     }else if((currentTime + (60 * 60)) >= req.session.access_token_expiry){
-      console.log('token is about to or has expired!');
       refreshSpotifyToken(req, res, next);
     }else{
       next();

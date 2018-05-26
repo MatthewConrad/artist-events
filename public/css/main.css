@@ -37,6 +37,8 @@ body {
     font-weight: 600;
     margin: 0 12px;
 
+    background: none;
+    border: none;
     text-decoration: none;
     color: #fff;
 }
@@ -48,6 +50,7 @@ body {
     color: #fff;
     line-height: 16px;
     padding: 12px;
+    border: none;
 }
 
 .btn-flat {
@@ -357,4 +360,21 @@ section:first-of-type {
 
 .modal-content__description{
     margin-bottom:48px;
+}
+
+.modal-content > form > input[type="text"]{
+    display: block;
+    width: 420px;
+    padding: 8px;
+    border-radius: 2px;
+    border:none;
+    margin: 24px auto;
+}
+
+#modal-location > .modal-content{
+    padding: 64px 0 48px 0;
+}
+
+#location-message{
+    margin-bottom: 24px;
 }
